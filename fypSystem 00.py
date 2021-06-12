@@ -4,22 +4,19 @@ import os
 import random
 import numpy as np
 from scipy.stats.stats import pearsonr
-from deap import base, creator, tools   # ??? python3 setup.py install ???
-from bokeh import *   # conda install bokeh
-from bokeh.plotting import figure, show
-# from bokeh.tests.test_driving import offset   # ??? NOT FOUND
+from deap import base, creator, tools
+# from bokeh.tests.test_driving import offset
 
 try:
+    from Tkinter import *
+    import Tkinter as tk
+    import ttk
+    import tkFileDialog as filedialog
+except:
     from tkinter import *
     import tkinter as tk
     from tkinter import ttk
     from tkinter import filedialog
-except:
-    """from Tkinter import *   # chk existance -> python3 -m tkinter
-    import Tkinter as tk
-    import ttk
-    import tkFileDialog as filedialog"""
-    
 
 import datetime
 import csv
@@ -33,32 +30,11 @@ import matplotlib.animation as animation
 from matplotlib import style
 
 from matplotlib import pyplot as plt
-# ===global var===\
-# ERROR: 'XXX' is not defined in the global scope ~Python(variable-not-defined-globally)
-# varTest, directory1Select, directory2Select, directory3Select, population, crossover, mutation, minyear, maxyear, v, v1 = None
-    # ERROR: TypeError: cannot unpack non-iterable NoneType object 
-varTest = None
-directory1Select = None
-directory2Select = None
-directory3Select = None
-population = None
-crossover = None
-mutation = None
-minyear = None
-maxyear = None
-v = None
-v1 = None
-inputRowHeader = None
-compareRowHeader = None
-canvas1 = None
-canvas2 = None
-canvas3 = None
 
-path = None   # UnboundLocalError: local variable 'path' referenced before assignment
-# ===global var===
+
 
 doLogging = True
-minInt = float("-inf")   # ???
+minInt = float("-inf")
 #set default value
 # maxYear - minYear = size of arrays
 minYear = 1970
@@ -72,7 +48,7 @@ data_matrix = []
 compare_data_matrix = []
 
 
-# CXPB is the probability with which two individuals
+# CXPB  is the probability with which two individuals
 #       are crossed
 #
 # MUTPB is the probability for mutating an individual
@@ -101,7 +77,7 @@ figure_graph3 = Figure(figsize=(12,5.5), dpi=100)
 ax3 = figure_graph3.add_subplot(111)
 
 
-prev_path = "/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/"   # ???/-
+prev_path = "D:\\FYPenv\\previous\\"
 if not os.path.exists(prev_path):
     os.makedirs(prev_path)
     open(prev_path+"ALL_previous.csv", 'w+').close()
@@ -125,11 +101,11 @@ def animate_graph1(i):
     yar = []
     zar = []
     
-    file_size = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution1_previous.csv").st_size
+    file_size = os.stat(r"D:\\FYPenv\\previous\\evolution1_previous.csv").st_size
 
     if file_size != 0:
         try:
-            with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution1_previous.csv", "r") as f:
+            with open("D:\\FYPenv\\previous\\evolution1_previous.csv", "r") as f:
                 reader = csv.reader(f, skipinitialspace=TRUE)
                 #skip the header
                 next(reader)
@@ -155,11 +131,11 @@ def animate_graph2(i):
     yar2 = []
     zar2 = []
 
-    file_size2 = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution2_previous.csv").st_size
+    file_size2 = os.stat(r"D:\\FYPenv\\previous\\evolution2_previous.csv").st_size
 
     if file_size2 != 0:
         try:
-            with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution2_previous.csv", "r") as f2:
+            with open("D:\\FYPenv\\previous\\evolution2_previous.csv", "r") as f2:
                 reader2 = csv.reader(f2, skipinitialspace=TRUE)
                 #skip the header
                 next(reader2)
@@ -185,11 +161,11 @@ def animate_graph3(i):
     yar3 = []
     zar3 = []
 
-    file_size3 = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution3_previous.csv").st_size
+    file_size3 = os.stat(r"D:\\FYPenv\\previous\\evolution3_previous.csv").st_size
 
     if file_size3 != 0:
         try:
-            with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution3_previous.csv", "r") as f3:
+            with open("D:\\FYPenv\\previous\\evolution3_previous.csv", "r") as f3:
                 reader3 = csv.reader(f3, skipinitialspace=TRUE)
                 #skip the header
                 next(reader3)
@@ -209,6 +185,7 @@ def animate_graph3(i):
     ax3.set_xlabel('Generation')
     ax3.set_ylabel('Fitnesses')
 
+
 class AutoScrollbar(Scrollbar):
     # a scrollbar that hides itself if it's not needed.  only
     # works if you use the grid geometry manager.
@@ -224,16 +201,17 @@ class AutoScrollbar(Scrollbar):
     def place(self, **kw):
         raise (TclError, "place cannot be used  with this widget")
 
+
 def animate(i):
     xar = []
     yar = []
     zar = []
 
-    file_size = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution1_previous.csv").st_size
+    file_size = os.stat(r"D:\\FYPenv\\previous\\evolution1_previous.csv").st_size
 
     if file_size != 0:
         try:
-            with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution1_previous.csv", "r") as f:
+            with open("D:\\FYPenv\\previous\\evolution1_previous.csv", "r") as f:
                 reader = csv.reader(f, skipinitialspace=TRUE)
                 #skip the header
                 next(reader)
@@ -255,11 +233,11 @@ def animate(i):
     yar2 = []
     zar2 = []
 
-    file_size2 = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution2_previous.csv").st_size
+    file_size2 = os.stat(r"D:\\FYPenv\\previous\\evolution2_previous.csv").st_size
 
     if file_size2 != 0:
         try:
-            with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution2_previous.csv", "r") as f2:
+            with open("D:\\FYPenv\\previous\\evolution2_previous.csv", "r") as f2:
                 reader2 = csv.reader(f2, skipinitialspace=TRUE)
                 #skip the header
                 next(reader2)
@@ -281,11 +259,11 @@ def animate(i):
     yar3 = []
     zar3 = []
 
-    file_size3 = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution3_previous.csv").st_size
+    file_size3 = os.stat(r"D:\\FYPenv\\previous\\evolution3_previous.csv").st_size
 
     if file_size3 != 0:
         try:
-            with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution3_previous.csv", "r") as f3:
+            with open("D:\\FYPenv\\previous\\evolution3_previous.csv", "r") as f3:
                 reader3 = csv.reader(f3, skipinitialspace=TRUE)
                 #skip the header
                 next(reader3)
@@ -305,8 +283,6 @@ def animate(i):
 
 
 def doStuff():
-    global path   # UnboundLocalError: local variable 'path' referenced before assignment
-
     if not directory1Select.folder_path:
         popupmsg("Please select input path for Select Input Folder ! ")
     else:
@@ -396,7 +372,7 @@ def doStuff():
         logFile.close()
         simpleLog.close()
     source = r"%s" % stats_path
-    destination = r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/"
+    destination = r"D:\\FYPenv\\previous\\"
     consolidate(source,destination)
     print("All done!")
 
@@ -407,7 +383,7 @@ def resolve_path(filename, destination_dir, fileExt):
     substring3= "evolution2_"
     substring4= "evolution3_"
     newName = ""
-    if string1.find(substring1) == 0:   # ???
+    if string1.find(substring1) == 0:
         newName = substring1 + "previous" + fileExt
 
     elif string1.find(substring2) == 0:
@@ -434,7 +410,7 @@ def consolidate(source, destination):
             source_path = os.path.join(root, f)
             fileExtension = os.path.splitext(source_path)[1]
             destination_path = resolve_path(f, destination, fileExtension)
-            shutil.copyfile(source_path, destination_path)   # ???
+            shutil.copyfile(source_path, destination_path)
 
 def getFileExtension(folder):
     for root, dirs, files in os.walk(folder):
@@ -821,14 +797,14 @@ def parseDataFilebyYear(folder, l_matrix, rowHeader, col_num, ignoreZero):
             reader = csv.reader(f, skipinitialspace=True)
             for row in reader:
                 #skip the first column as it is Year in str
-                #the rest of the column will be year in int   # ???
-                year = row[1:]   # ChkBck row[:1]
+                #the rest of the column will be year in int
+                year = row[1:]
                 break
-            for row2 in reader:   # ???
+            for row2 in reader:
                 array = row2[1:]
                 index = int(year[count]) - minYear
 
-                try:   # ???
+                try:
                     for idx,item in enumerate(array):
                         if(idx < total_col_num):
                             if(array[idx] != None and len(array[idx]) > 0):
@@ -867,13 +843,13 @@ def getHeaders(folder,rowHeader):
     files = os.listdir(folder)
     for file in files:
         handle = open(folder + file, "r")
-        if(str(rowHeader) == "indicatorList"):   # ChkBck
+        if(str(rowHeader) == "indicatorList"):
             #ignores the first column since it's year
             array = handle.readline().split(",")[1:]
             for item in array:
                 l_headers.append(item.replace("\n",""))
         
-        if(str(rowHeader) == "yearList"):   # ChkBck
+        if(str(rowHeader) == "yearList"):
             with handle as f:
                 reader = csv.reader(f, skipinitialspace=True)
                 #skip the header
@@ -887,7 +863,7 @@ def getHeadersbyYear(folder,rowHeader):
     global minYear
     global maxYear
     files = os.listdir(folder)
-    for file in files:   # ChkBck both branches
+    for file in files:
         handle = open(folder + file, "r")
         l_headers_year = []
         if(str(rowHeader) == "indicatorList"):
@@ -1007,14 +983,9 @@ class FinancialDataSeries(tk.Tk):
         
         tk.Tk.__init__(self, *args, **kwargs)
 
-        tk.Tk.wm_geometry(self,"1200x700")
-        ### GUI Icon ???
+        # tk.Tk.wm_geometry(self,"1200x700")
         # tk.Tk.iconbitmap(self,default="Financial.ico")
-        # tk.Tk.iconbitmap(self,default="Financial.xbm")
-        # tk.Tk.iconbitmap(self,default="/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/Financial.ico")
-        
-        # fypSystem.py
-        tk.Tk.wm_title(self, "Extracting Hidden Trends and Patterns from Financial Data Series")
+        # tk.Tk.wm_title(self, "Extracting Hidden Trends and Patterns from Financial Data Series")
 
         container = tk.Frame(self)
 
@@ -1096,7 +1067,6 @@ class StartPage(tk.Frame):
 
 
 class ConfigPage(tk.Frame):
-    
 
     def __init__(self, parent, controller,pages):
         tk.Frame.__init__(self, parent)
@@ -1111,9 +1081,6 @@ class ConfigPage(tk.Frame):
                             command=lambda: controller.show_frame(ThreeGraph))
         button2.grid(row = 2, column = 1)
    
-        # Remove redundant
-        """
-        global varTest
         global directory1Select
         global directory2Select
         global directory3Select
@@ -1124,12 +1091,10 @@ class ConfigPage(tk.Frame):
         global maxyear
         global v
         global v1
-        """
-        global varTest, directory1Select, directory2Select, directory3Select, population, crossover, mutation, minyear, maxyear, v, v1
 
         directory1Select = self.FolderSelect(self,"Select Input Folder")
-        directory1Select.grid(row = 4, columnspan = 3)
 
+        directory1Select.grid(row = 4, columnspan = 3)
         directory2Select = self.FolderSelect(self,"Select Compare Folder")
         directory2Select.grid(row = 5, columnspan = 3)
 
@@ -1139,7 +1104,7 @@ class ConfigPage(tk.Frame):
         v = StringVar()
         v.set("indicatorList")
         v1 = StringVar()
-        v1.set("indicatorList")   # ChkBck
+        v1.set("indicatorList")
 
         lbl = Label(self, text="Choose Row Header for Input Folder", width=30, anchor="w")
         lbl.grid(row = 7, column = 0)
@@ -1162,12 +1127,8 @@ class ConfigPage(tk.Frame):
         label = Label(self, text="Population Number", width=30, anchor="w")
         label.grid(row = 9, column = 0)
 
-        population = Scale(self, from_=0, to=100, resolution = 1, orient=HORIZONTAL, length=250)
-        population.grid(row = 9, column = 1, columnspan = 2)   # ChkBck -> anchor=CENTER
-        """
-            button = Button(root, text="Get Scale Value", command=sel)
-            button.pack(anchor=CENTER)
-        """
+        population = Scale(self,  from_=0, to=100, resolution = 1, orient=HORIZONTAL, length=250)
+        population.grid(row = 9, column = 1, columnspan = 2)
 
         label1 = Label(self, text="Cross-over Probability", width=30, anchor="w")
         label1.grid(row = 10, column = 0)
@@ -1178,10 +1139,10 @@ class ConfigPage(tk.Frame):
         label2 = Label(self, text="Mutation Probability", width=30, anchor="w")
         label2.grid(row = 12, column = 0)
 
-        mutation = Scale(self, from_=0, to=0.9, resolution = 0.1, orient=HORIZONTAL, length=250)
+        mutation= Scale(self,  from_=0, to=0.9, resolution = 0.1, orient=HORIZONTAL, length=250)
         mutation.grid(row = 12, column = 1, columnspan = 2)
 
-        c = ttk.Button(self, text="find", command=lambda: [doStuff(),controller.show_frame(ThreeGraph),popupmsg("Done!")])   # ???
+        c = ttk.Button(self, text="find", command=lambda: [doStuff(),controller.show_frame(ThreeGraph),popupmsg("Done!")])
         c.grid(row = 17, column = 1)
 
     class FolderSelect(Frame):
@@ -1338,12 +1299,11 @@ class TablePage1(tk.Frame):
 
         lst = []
 
-        file_size = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/ALL_previous.csv").st_size
-
+        file_size = os.stat(r"D:\\FYPenv\\previous\\ALL_previous.csv").st_size
 
         if file_size != 0:
             try:
-                with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/ALL_previous.csv", "r") as f:
+                with open("D:\\FYPenv\\previous\\ALL_previous.csv", "r") as f:
                     reader = csv.reader(f, skipinitialspace=TRUE)
                     #skip the header
                     next(reader)
@@ -1374,11 +1334,11 @@ class TablePage1(tk.Frame):
 
         list1 = []
 
-        file_size2 = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/ALL_previous.csv").st_size
+        file_size2 = os.stat(r"D:\\FYPenv\\previous\\ALL_previous.csv").st_size
 
         if file_size2 != 0:
             try:
-                with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution1_previous.csv", "r") as f2:
+                with open("D:\\FYPenv\\previous\\evolution1_previous.csv", "r") as f2:
                     reader2 = csv.reader(f2, skipinitialspace=TRUE)
                     #skip the header
                     next(reader2)
@@ -1435,11 +1395,11 @@ class TablePage2(tk.Frame):
 
         lst = []
 
-        file_size = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/ALL_previous.csv").st_size
+        file_size = os.stat(r"D:\\FYPenv\\previous\\ALL_previous.csv").st_size
 
         if file_size != 0:
             try:
-                with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/ALL_previous.csv", "r") as f:
+                with open("D:\\FYPenv\\previous\\ALL_previous.csv", "r") as f:
                     reader = csv.reader(f, skipinitialspace=TRUE)
                     #skip the header
                     next(reader)
@@ -1471,11 +1431,11 @@ class TablePage2(tk.Frame):
 
         list1 = []
 
-        file_size2 = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution2_previous.csv").st_size
+        file_size2 = os.stat(r"D:\\FYPenv\\previous\\evolution2_previous.csv").st_size
 
         if file_size2 != 0:
             try:
-                with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution2_previous.csv", "r") as f2:
+                with open("D:\\FYPenv\\previous\\evolution2_previous.csv", "r") as f2:
                     reader2 = csv.reader(f2, skipinitialspace=TRUE)
                     #skip the header
                     next(reader2)
@@ -1529,11 +1489,11 @@ class TablePage3(tk.Frame):
 
         lst = []
 
-        file_size = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/ALL_previous.csv").st_size
+        file_size = os.stat(r"D:\\FYPenv\\previous\\ALL_previous.csv").st_size
 
         if file_size != 0:
             try:
-                with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/ALL_previous.csv", "r") as f:
+                with open("D:\\FYPenv\\previous\\ALL_previous.csv", "r") as f:
                     reader = csv.reader(f, skipinitialspace=TRUE)
                     #skip the header, till third evolution cycle
                     next(reader)
@@ -1567,11 +1527,11 @@ class TablePage3(tk.Frame):
 
         list1 = []
         
-        file_size2 = os.stat(r"/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution3_previous.csv").st_size
+        file_size2 = os.stat(r"D:\\FYPenv\\previous\\evolution3_previous.csv").st_size
 
         if file_size2 != 0:
             try:
-                with open("/Users/zrhun/Downloads/SzeSin/ExtractingHiddenTrendsAndPatternsFromFinancialDataSeries/datasets/previous/evolution3_previous.csv", "r") as f2:
+                with open("D:\\FYPenv\\previous\\evolution3_previous.csv", "r") as f2:
                     reader2 = csv.reader(f2, skipinitialspace=TRUE)
                     #skip the header
                     next(reader2)
